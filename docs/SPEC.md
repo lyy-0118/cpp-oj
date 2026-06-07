@@ -144,25 +144,105 @@ UI 风格：
 
 ```text
 oj-project/
-├── backend/
-│   ├── src/
-│   ├── include/
-│   └── CMakeLists.txt
-├── frontend/
-│   ├── index.html
-│   ├── login.html
-│   ├── problems.html
-│   ├── problem.html
-│   ├── admin.html
-│   ├── problem-form.html
-│   ├── css/
-│   └── js/
-├── sql/
-│   ├── schema.sql
-│   └── seed.sql
-└── docs/
-    └── SPEC.md
+├── backend/                         # C++ 后端服务目录
+│   ├── CMakeLists.txt               # 后端 CMake 构建配置
+│   ├── include/                     # 后端头文件
+│   │   ├── api/                     # HTTP 路由声明
+│   │   │   ├── admin_routes.h       # 管理员接口路由声明
+│   │   │   ├── auth_routes.h        # 登录认证接口路由声明
+│   │   │   ├── judge_routes.h       # 运行与提交判题接口路由声明
+│   │   │   └── problem_routes.h     # 普通题目接口路由声明
+│   │   ├── auth/                    # 认证与权限模块声明
+│   │   │   ├── auth_service.h       # 登录、用户身份校验服务声明
+│   │   │   └── token_store.h        # 简单 token 存储与校验声明
+│   │   ├── common/                  # 通用基础模块声明
+│   │   │   ├── config.h             # 配置项声明
+│   │   │   ├── error.h              # 统一错误结构声明
+│   │   │   ├── response.h           # 统一 JSON 响应封装声明
+│   │   │   └── utils.h              # 通用工具函数声明
+│   │   ├── db/                      # 数据库访问模块声明
+│   │   │   ├── db_pool.h            # MySQL 连接管理声明
+│   │   │   ├── problem_repository.h # 题目数据访问声明
+│   │   │   ├── test_case_repository.h # 测试用例数据访问声明
+│   │   │   └── user_repository.h    # 用户数据访问声明
+│   │   ├── judge/                   # 判题模块声明
+│   │   │   ├── compiler.h           # C/C++ 编译封装声明
+│   │   │   ├── judge_service.h      # 判题主流程服务声明
+│   │   │   ├── output_compare.h     # 输出比较规则声明
+│   │   │   ├── process_runner.h     # 子进程运行与超时控制声明
+│   │   │   └── temp_workspace.h     # 临时目录管理声明
+│   │   └── models/                  # 数据模型声明
+│   │       ├── problem.h            # 题目模型
+│   │       ├── test_case.h          # 测试用例模型
+│   │       └── user.h               # 用户模型
+│   ├── src/                         # 后端实现文件
+│   │   ├── api/                     # HTTP 路由实现
+│   │   │   ├── admin_routes.cpp     # 管理员接口实现
+│   │   │   ├── auth_routes.cpp      # 登录认证接口实现
+│   │   │   ├── judge_routes.cpp     # 判题接口实现
+│   │   │   └── problem_routes.cpp   # 题目接口实现
+│   │   ├── auth/                    # 认证与权限模块实现
+│   │   │   ├── auth_service.cpp     # 登录、用户身份校验服务实现
+│   │   │   └── token_store.cpp      # 简单 token 存储与校验实现
+│   │   ├── common/                  # 通用基础模块实现
+│   │   │   ├── config.cpp           # 配置读取与默认值实现
+│   │   │   ├── error.cpp            # 错误码与错误对象实现
+│   │   │   ├── response.cpp         # 统一 JSON 响应封装实现
+│   │   │   └── utils.cpp            # 通用工具函数实现
+│   │   ├── db/                      # 数据库访问模块实现
+│   │   │   ├── db_pool.cpp          # MySQL 连接管理实现
+│   │   │   ├── problem_repository.cpp # 题目数据访问实现
+│   │   │   ├── test_case_repository.cpp # 测试用例数据访问实现
+│   │   │   └── user_repository.cpp  # 用户数据访问实现
+│   │   ├── judge/                   # 判题模块实现
+│   │   │   ├── compiler.cpp         # C/C++ 编译封装实现
+│   │   │   ├── judge_service.cpp    # 判题主流程服务实现
+│   │   │   ├── output_compare.cpp   # 输出比较规则实现
+│   │   │   ├── process_runner.cpp   # 子进程运行与超时控制实现
+│   │   │   └── temp_workspace.cpp   # 临时目录管理实现
+│   │   └── main.cpp                 # 后端入口，注册路由并启动服务
+│   ├── third_party/                 # 第三方单头文件依赖
+│   │   ├── httplib.h                # cpp-httplib HTTP 服务库
+│   │   └── json.hpp                 # nlohmann/json JSON 库
+│   └── tmp/                         # 后端运行时临时目录
+│       └── judge/                   # 判题临时工作目录
+├── frontend/                        # 原生 HTML/CSS/JS 前端目录
+│   ├── admin.html                   # 管理员题目管理页
+│   ├── index.html                   # 首页或默认跳转页
+│   ├── login.html                   # 登录页
+│   ├── problem.html                 # 题目详情与做题页
+│   ├── problem-form.html            # 管理员新增 / 编辑题目页
+│   ├── problems.html                # 题目列表页
+│   ├── css/                         # 样式文件目录
+│   │   ├── admin.css                # 管理后台样式
+│   │   ├── auth.css                 # 登录页样式
+│   │   ├── problem.css              # 题目详情页样式
+│   │   └── style.css                # 全局通用样式
+│   └── js/                          # 前端脚本目录
+│       ├── admin.js                 # 管理员题目管理逻辑
+│       ├── api.js                   # API 请求封装
+│       ├── auth.js                  # 登录、登出、token 处理
+│       ├── problem.js               # 题目详情、运行、提交逻辑
+│       ├── problem-form.js          # 新增 / 编辑题目表单逻辑
+│       └── problems.js              # 题目列表页逻辑
+├── sql/                             # 数据库脚本目录
+│   ├── schema.sql                   # 建表脚本
+│   └── seed.sql                     # 初始化账号、题目、测试用例数据
+├── docs/                            # 项目文档目录
+│   └── SPEC.md                      # 项目规格说明文档
+├── .gitignore                       # Git 忽略规则
+└── README.md                        # 项目说明与运行指南
 ```
+
+目录职责：
+
+- `backend/include`：后端头文件，按 API、认证、数据库、判题、通用工具、数据模型分层。
+- `backend/src`：后端实现文件，目录结构与 `include` 保持一致。
+- `backend/third_party`：第一版可直接放置单头文件依赖，例如 `cpp-httplib` 与 `nlohmann/json`。
+- `backend/tmp/judge`：判题临时工作目录，运行时创建随机子目录，提交结束后清理；该目录不提交生成文件。
+- `frontend`：由后端静态托管的页面、样式与脚本，不引入前端构建工具。
+- `sql`：数据库建表脚本与初始化数据脚本。
+- `docs`：项目规格、接口说明、后续设计文档。
 
 ## 8. 数据持久化范围
 
