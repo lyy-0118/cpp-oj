@@ -128,6 +128,8 @@ UI 风格：
 - MySQL C API 或 MySQL Connector/C++：访问 MySQL
 - CMake：构建项目
 
+依赖安装说明见 `docs/DEPENDENCIES.md`。
+
 运行环境：
 
 - 推荐 WSL2 / Linux
